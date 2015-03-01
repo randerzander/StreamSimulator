@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>StreamSimulator</artifactId>
+    <groupId>com.github.randerzander</groupId>
+    <packaging>jar</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>StreamSimulator</name>
+    <url>http://github.com/randerzander/StreamSimulator</url>
+    <description>LogFile to Kafka Stream Simulator</description>
+
+    <repositories>
+      <repository>
+        <id>hortonworks</id>
+        <url>http://repo.hortonworks.com/content/repositories/releases/</url>
+      </repository>   
+    </repositories>
+
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka_2.10</artifactId>
+        <version>0.8.1.2.2.0.0-2041</version>
+      </dependency>
+    </dependencies>
+
+    <build>
+      <sourceDirectory>src</sourceDirectory>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>1.4</version>
+            <configuration>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
+                <configuration>
+                  <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                      <mainClass>com.github.randerzander.StreamSimulator</mainClass>
+                    </transformer>
+                  </transformers>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+    </build>
+</project>
