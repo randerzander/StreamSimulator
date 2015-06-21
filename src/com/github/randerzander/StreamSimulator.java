@@ -22,11 +22,12 @@ public class StreamSimulator {
     String topic = args[0];
     String input = args[1];
     String host = args[2];
+    if (!host.contains(":")) host = host + ":6667";
     int speed = Integer.parseInt(args[3]);
     SimpleDateFormat dateFormat = (args.length == 7) ? new SimpleDateFormat(args[6]) : new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
 
     Properties props = new Properties();
-    props.put("metadata.broker.list", host+":6667"); //HDP 2.2 Kafka uses port 6667 by default
+    props.put("metadata.broker.list", host); //HDP 2.2 Kafka uses port 6667 by default
     props.put("serializer.class", "kafka.serializer.StringEncoder");
     props.put("request.required.acks", "1"); //Using synchronous message production
     ProducerConfig config = new ProducerConfig(props);
