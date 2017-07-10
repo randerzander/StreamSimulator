@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>StreamSimulator</name>
     <url>http://github.com/randerzander/StreamSimulator</url>
-    <description>LogFile to Kafka Stream Simulator</description>
+    <description>Stream a file to NiFi or Kafka</description>
 
     <repositories>
       <repository>
@@ -17,13 +17,43 @@
       </repository>   
     </repositories>
 
-    <dependencies>
-      <dependency>
-        <groupId>org.apache.kafka</groupId>
-        <artifactId>kafka_2.10</artifactId>
-        <version>0.8.1.2.2.0.0-2041</version>
-      </dependency>
-    </dependencies>
+    <properties>
+      <nifi.version>1.3.0</nifi.version>
+      <kafka.version>0.8.1</kafka.version>
+      <hdp.version>2.2.0.0-2041</hdp.version>
+    </properties>
+
+    <profiles>
+      <profile>
+        <id>nifi</id>
+        <activation>
+          <activeByDefault>true</activeByDefault>
+        </activation>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.nifi</groupId>
+            <artifactId>nifi-site-to-site-client</artifactId>
+            <version>${nifi.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+          </dependency>
+        </dependencies>
+      </profile>
+
+      <profile>
+        <id>kafka</id>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.10</artifactId>
+            <version>${kafka.version}.${hdp.version}</version>
+          </dependency>
+        </dependencies>
+      </profile>
+    </profiles>
 
     <build>
       <sourceDirectory>src</sourceDirectory>
@@ -34,6 +64,16 @@
             <version>1.4</version>
             <configuration>
               <createDependencyReducedPom>true</createDependencyReducedPom>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
             <executions>
               <execution>
